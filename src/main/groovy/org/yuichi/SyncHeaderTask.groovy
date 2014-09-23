@@ -1,3 +1,7 @@
+/*
+ * SyncHeader Plugin for Gradle
+ * Copyright (C) 2014 Yuichi Murata
+ */
 package org.yuichi
 
 import org.gradle.api.file.FileTree
@@ -14,14 +18,15 @@ class SyncHeaderTask extends DefaultTask {
 	String headerFile = 'HEADER'
 	String src = 'src'
 	
-	boolean ask(File f, String header) {
+	String ask(File f, String header) {
 		def msg = '\n'
 		msg += 'File: ' + f + '\n'
 		msg += 'Existing header found:\n'
 		msg += header
-		msg += '(o)verwite, (i)gnore, (s)top, or overwite (a)ll ? '
+		msg += 'Override?\n'
+		msg += '(y)es, (n)o, (s)top, or (a)ll: '
 		def action
-		while ((action != 'o') && (action != 'i') && (action != 's') &&
+		while ((action != 'y') && (action != 'n') && (action != 's') &&
 				(action != 'a')) {
 			action = System.console().readLine(msg)
 		}
@@ -45,7 +50,6 @@ class SyncHeaderTask extends DefaultTask {
 						'noBody: ' + noBody)
 			}
 		}
-		
 		def overwite = true
 		if (hp.header != '') {
 			switch (existingHeader) {
@@ -55,27 +59,30 @@ class SyncHeaderTask extends DefaultTask {
 				case 'ask':
 					def action = ask(f, hp.header)
 					switch (action) {
-						case 'o':
+						case 'y':
 							break
 						case 'a':
-							existingHeader = 'overwite'
+							existingHeader = 'overwrite'
 							break;
-						case 'i':
+						case 'n':
 							overwite = false
 							break;
 						case 's':
 							throw new SyncFailedException(f, 
 									'Header already exists')
+						default:
+							throw new SyncFailedException(f, 
+									'Unkown action for overwrite')
 					}
 					break
-				case 'overwite':
+				case 'overwrite':
 					break;
 				default:
 					throw new SyncHeaderException( 
 						'Unknown value for existingHeader: ' + existingHeader)
 			}
 		}
-
+		
 		if (overwite) {
 			f.setText(newCopyright + hp.body)
 			logger.debug String.format('File %s updated', f)
@@ -89,7 +96,7 @@ class SyncHeaderTask extends DefaultTask {
 		if (!hf.exists())
 			throw new SyncHeaderException(String.format(
 					'Header file %s not found', hf))
-		def header = '/*'
+		def header = '/*\n'
 		hf.each{ line ->
 			header += ' * ' + line + '\n'
 		}

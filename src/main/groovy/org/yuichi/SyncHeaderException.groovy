@@ -1,3 +1,7 @@
+/*
+ * SyncHeader Plugin for Gradle
+ * Copyright (C) 2014 Yuichi Murata
+ */
 package org.yuichi
 import org.gradle.api.GradleScriptException
 

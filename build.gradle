@@ -1,7 +1,19 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
+apply plugin: 'syncheader'
 group = 'org.yuichi'
 version '1.0-SNAPSHOT'
+
+buildscript {
+	repositories {
+		maven {
+			url uri('../repo')
+		}
+	}
+	dependencies {
+		classpath group: 'org.yuichi', name: 'syncheader', version: '1.0-SNAPSHOT'
+	}
+}
 
 repositories {
     mavenCentral()
