@@ -1,17 +1,22 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
 apply plugin: 'syncheader'
-group = 'org.yuichi'
-version '1.0-SNAPSHOT'
+group = 'org.yuichi1004'
+version '0.1'
 
 buildscript {
 	repositories {
+		mavenCentral()
+		jcenter()
 		maven {
-			url uri('../repo')
+			url "http://dl.bintray.com/yuichi1004/maven"
 		}
 	}
 	dependencies {
-		classpath group: 'org.yuichi', name: 'syncheader', version: '1.0-SNAPSHOT'
+		classpath group: 'org.yuichi1004', name: 'gradle-syncheader', version: '0.1'
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
 	}
 }
 
@@ -22,7 +27,17 @@ repositories {
 dependencies {
 	compile gradleApi()
 	compile localGroovy()
-	 testCompile 'junit:junit:4.11'
+	testCompile 'junit:junit:4.11'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+	from sourceSets.main.allSource
+	classifier = 'sources'
 }
 
 uploadArchives {
@@ -32,4 +47,36 @@ uploadArchives {
 		}
 	}
 }
-                                                                                                                                                       
+ 
+publishing {
+	publications {
+		plugin(MavenPublication) {
+			from components.java
+			artifact sourcesJar
+			artifact javadocJar
+		}
+	}
+}
+
+bintray {
+	user = bintrayUsername
+	key = bintrayApiKey
+	
+	publications = ['plugin']
+	pkg {
+		repo = 'maven'
+		userOrg = 'yuichi1004'
+		name = 'syncheader'
+		desc = 'SyncHeader gradle plugin'
+		websiteUrl = 'https://github.com/yuichi1004/gradle-syncheader'
+		issueTrackerUrl = 'https://github.com/yuichi1004/gradle-syncheader/issues'
+		vcsUrl = 'https://github.com/yuichi1004/gradle-syncheader.git'
+		licenses = ['MIT']
+		labels = ['gradle']
+		publicDownloadNumbers = true
+		version {
+			attributes = ['gradle-plugin': 'org.yuichi1004.gradle-syncheader']
+		}
+	}
+}
+
