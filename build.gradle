@@ -4,7 +4,7 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 apply plugin: 'syncheader'
 group = 'org.yuichi1004'
-version '0.1'
+version '0.2'
 
 buildscript {
 	repositories {
@@ -15,7 +15,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath group: 'org.yuichi1004', name: 'gradle-syncheader', version: '0.1'
+		classpath group: 'org.yuichi1004', name: 'gradle-syncheader', version: '0.2'
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
 	}
 }

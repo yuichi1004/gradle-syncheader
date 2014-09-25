@@ -51,7 +51,7 @@ class SyncHeaderTask extends DefaultTask {
 			}
 		}
 		def overwite = true
-		if (hp.header != '') {
+		if (hp.header != '' && hp.header != newCopyright) {
 			switch (existingHeader) {
 				case 'error':
 					throw new SyncFailedException(f, 'Header already exists')
