@@ -31,7 +31,24 @@ Then specify 'sycnHeader' task.
 
     gradle syncHeader
 
+
+Configuration
+-----------------
+
+    syncHeader {
+    	noBody = 'warn'		// Specify the action if no body found
+							// 'warn' or 'error' (default: warn)
+    	existingHeader = 'ask'	// Specify the action for existing headers
+								// 'error', 'ask' or 'overwrite' (default: ask)
+    	headerFile = 'HEADER' // Specify header file naem (default: HEADER)
+    	src = 'src'		// Specify src directory (default: src)
+    }
+
 License
 ------------------
 
 This software is available under MIT License.
+
+
+Copyright (C) Yuichi Murata
+
